@@ -1,0 +1,33 @@
+---
+- hosts: srv
+  tasks:
+    - name: Ensure the required dirs are present
+      become: yes
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items:
+        - /opt/complex
+
+    - name: Copy file to remote host
+      become: yes
+      copy:
+        src: main.py
+        dest: /opt/complex/main.py
+        mode: 0744
+
+    - name: Copy go file to remote
+      become: yes
+      copy:
+        src: logging.ini
+        dest: /opt/complex/logging.ini
+
+    - name: Copy systemd service file
+      become: yes
+      template: src=templates/complex.service.j2 dest=/etc/systemd/system/complex.service
+      notify: restart complex
+
+  handlers:
+    - name: restart complex
+      become: yes
+      service: name=complex state=restarted

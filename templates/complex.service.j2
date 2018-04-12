@@ -1,0 +1,14 @@
+[Unit]
+Description=Complex Application
+
+[Service]
+User=root
+Group=root
+
+ExecStart=/opt/complex/main.py hello
+WorkingDirectory=/opt/complex/
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
